@@ -47,6 +47,7 @@
     //播放中就是ture，其他状态false
     BOOL playStatus;
     NSNumber *_mode;
+    NSNumber *_repeatCount;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame viewIdentifier:(int64_t)viewId arguments:(id)args mRegistrar:(NSObject<FlutterPluginRegistrar> *) registrar {
@@ -57,11 +58,12 @@
         FlutterMethodChannel* channel = [FlutterMethodChannel
             methodChannelWithName:[NSString stringWithFormat:@"flutter_vap_view_%lld",viewId]
                   binaryMessenger:registrar.messenger];
-    
         
         [registrar addMethodCallDelegate: self channel:channel];
         
         _mode = args[@"contentMode"];
+        _repeatCount = args[@"playLoop"];
+        
         [self configWrapView];
     }
     return self;
@@ -106,7 +108,7 @@
     else {
         [self configWrapView];
     }
-    [_wrapView playHWDMP4:path repeatCount:0 delegate:self];
+    [_wrapView playHWDMP4:path repeatCount:_repeatCount.intValue delegate:self];
 }
 
 
